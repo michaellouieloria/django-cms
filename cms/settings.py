@@ -22,16 +22,19 @@ SECRET_KEY = 'g$+c-l1mzofiya)8$wmm!dos(wp(44ca#f4x!!+hbskxe(f(oj'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-TEMPLATE_DEBUG = True
+TEMPLATE_DEBUG = DEBUG
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 TEMPLATE_DIRS = (
-    os.path.join(os.path.dirname(__file__), '..', 'templates'),
+    os.path.join(BASE_DIR, 'templates'),
 )
 
+#STATIC_ROOT = os.path.join(BASE_DIR, 'static')
+STATIC_ROOT =  '/home/vagrant/django/code/cms/static/last/'
+STATIC_URL = '/static/'
 STATICFILES_DIRS = (
-    os.path.join(os.path.dirname(__file__), '..', 'static'),
+    os.path.join(BASE_DIR, 'static'),
 )
 
 # Application definition
@@ -44,6 +47,7 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'djangosecure',
+    'pipeline',
     'blog',
 )
 
@@ -55,11 +59,13 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.gzip.GZipMiddleware',
+    'pipeline.middleware.MinifyHTMLMiddleware',
     'djangosecure.middleware.SecurityMiddleware',
     'csp.middleware.CSPMiddleware',
     'cms.middleware.HeaderMiddleware',
 )
-
+#
 ROOT_URLCONF = 'cms.urls'
 
 WSGI_APPLICATION = 'cms.wsgi.application'
@@ -92,8 +98,6 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.7/howto/static-files/
 
-STATIC_URL = '/static/'
-
 LOGIN_REDIRECT_URL = '/accounts/loggedin/'
 
 SESSION_COOKIE_SECURE = True
@@ -112,3 +116,37 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 if DEBUG:
     EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
     EMAIL_FILE_PATH = 'messages'
+
+# STATICFILES_STORAGE = 'pipeline.storage.PipelineStorage'
+STATICFILES_STORAGE = 'pipeline.storage.PipelineCachedStorage'
+PIPELINE_YUGLIFY_BINARY = '/home/vagrant/node_modules/yuglify/bin/yuglify'
+# PIPELINE_CSS = {
+#     'css': {
+#         'source_filenames': (
+#           'css/style.css',
+#         ),
+#         'output_filename': 'css/style1.css',
+#         'extra_context': {
+#             'media': 'screen,projection',
+#         },
+#     },
+# }
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': 'debug.log',
+        },
+    },
+    'loggers': {
+        'django.request': {
+            'handlers': ['file'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+    },
+}
