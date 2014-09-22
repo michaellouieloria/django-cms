@@ -5,6 +5,7 @@ from django.shortcuts import render_to_response
 from django.http import HttpResponseRedirect
 from django.contrib.auth.forms import UserCreationForm
 from django.core.context_processors import csrf
+from cms.forms import ContactForm
 
 def home(request):
     return render_to_response('index.html')
@@ -12,25 +13,41 @@ def home(request):
 def about(request):
     return render_to_response('about.html')
 
+# def contact(request):
+#     errors = []
+#     if request.method == 'POST':
+#         if not request.POST.get('subject', ''):
+#             errors.append('Enter a subject.')
+#         if not request.POST.get('message', ''):
+#             errors.append('Enter a message.')
+#         if request.POST.get('email') and '@' not in request.POST['email']:
+#             errors.append('Enter a valid e-mail address.')
+#         if not errors:
+#             send_mail(
+#                 request.POST['subject'],
+#                 request.POST['message'],
+#                 request.POST.get('email', 'noreply@simplesite.com'),
+#                 ['administrator@simplesite.com'], #email address where message is sent.
+#             )
+#             return HttpResponseRedirect('/thanks/')
+#     return render(request, 'contact.html',
+#         {'errors': errors})
+
 def contact(request):
-    errors = []
     if request.method == 'POST':
-        if not request.POST.get('subject', ''):
-            errors.append('Enter a subject.')
-        if not request.POST.get('message', ''):
-            errors.append('Enter a message.')
-        if request.POST.get('email') and '@' not in request.POST['email']:
-            errors.append('Enter a valid e-mail address.')
-        if not errors:
+        form = ContactForm(request.POST)
+        if form.is_valid():
+            cd = form.cleaned_data
             send_mail(
-                request.POST['subject'],
-                request.POST['message'],
-                request.POST.get('email', 'noreply@simplesite.com'),
+                cd['subject'],
+                cd['message'],
+                cd.get('email', 'noreply@simplesite.com'),
                 ['administrator@simplesite.com'], #email address where message is sent.
             )
             return HttpResponseRedirect('/thanks/')
-    return render(request, 'contact.html',
-        {'errors': errors})
+    else:
+        form = ContactForm()
+    return render(request, 'contact.html', {'form': form})
 
 def thanks(request):
     return render_to_response('thanks.html')
