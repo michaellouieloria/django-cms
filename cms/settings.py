@@ -20,7 +20,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 SECRET_KEY = 'g$+c-l1mzofiya)8$wmm!dos(wp(44ca#f4x!!+hbskxe(f(oj'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 TEMPLATE_DEBUG = DEBUG
 
@@ -31,7 +31,7 @@ TEMPLATE_DIRS = (
 )
 
 #STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-STATIC_ROOT =  '/home/vagrant/django/code/cms/static/last/'
+STATIC_ROOT =  '/home/vagrant/django/code/cms/collect/'
 STATIC_URL = '/static/'
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static'),
@@ -46,11 +46,11 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'djangosecure',
     'pipeline',
+    'djangosecure',
     'blog',
 )
-
+#    'pipeline',
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -65,7 +65,7 @@ MIDDLEWARE_CLASSES = (
     'csp.middleware.CSPMiddleware',
     'cms.middleware.HeaderMiddleware',
 )
-#
+#    'pipeline.middleware.MinifyHTMLMiddleware',
 ROOT_URLCONF = 'cms.urls'
 
 WSGI_APPLICATION = 'cms.wsgi.application'
@@ -109,6 +109,14 @@ SECURE_FRAME_DENY = True
 SECURE_CONTENT_TYPE_NOSNIFF = True
 SECURE_BROWSER_XSS_FILTER = True
 CSP_DEFAULT_SRC = ("'self'")
+CSP_SCRIPT_SRC = ("'self'", "'unsafe-inline'")
+CSP_IMG_SRC = ("'self'")
+CSP_OBJECT_SRC = ("'self'")
+CSP_MEDIA_SRC = ("'self'")
+CSP_FRAME_SRC = ("'self'")
+CSP_FONT_SRC = ("'self'")
+CSP_CONNECT_SRC = ("'self'")
+CSP_STYLE_SRC = ("'self'", "'unsafe-inline'")
 X_FRAME_OPTIONS = 'DENY'
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
@@ -117,20 +125,28 @@ if DEBUG:
     EMAIL_BACKEND = 'django.core.mail.backends.filebased.EmailBackend'
     EMAIL_FILE_PATH = 'messages'
 
-# STATICFILES_STORAGE = 'pipeline.storage.PipelineStorage'
+STATICFILES_FINDERS = (
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+    )
+
+#STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
+#STATICFILES_STORAGE = 'pipeline.storage.PipelineStorage'
 STATICFILES_STORAGE = 'pipeline.storage.PipelineCachedStorage'
 PIPELINE_YUGLIFY_BINARY = '/home/vagrant/node_modules/yuglify/bin/yuglify'
-# PIPELINE_CSS = {
-#     'css': {
-#         'source_filenames': (
-#           'css/style.css',
-#         ),
-#         'output_filename': 'css/style1.css',
-#         'extra_context': {
-#             'media': 'screen,projection',
-#         },
-#     },
-# }
+PIPELINE_CSS = {
+    'css': {
+        'source_filenames': (
+          'css/style.css',
+        ),
+        'output_filename': 'css/style.css',
+        'extra_context': {
+            'media': 'screen,projection',
+        },
+    },
+}
+
+
 
 LOGGING = {
     'version': 1,
