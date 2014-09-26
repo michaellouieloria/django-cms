@@ -4,30 +4,48 @@
 
 {% block content %}
 
-    <h2>Contact Form</h2>
-    <p>To send us a message fill out the below form.</p>
-
-    {% if form.errors %}
-        <p style="color: red;">
-            Please correct the error{{ form.errors|pluralize }} below.
-        </p>
-    {% endif %}
-
-    <form method="post">{% csrf_token %}
-    <p>Subject: <input type="text" name="subject" value="{{ form.subject.value|default_if_none:"" }}"></p>
-    <p>Your e-mail: <input type="text" name="email" value="{{ form.email.value|default_if_none:"" }}"></p>
-    {{ form.email.errors }}
-
-    {% if form.email.errors %}
-        <ol>
-        {% for error in form.email.errors %}
-            <li><strong>{{ error|escape }}</strong></li>
-        {% endfor %}
-        </ol>
-    {% endif %}
-
-    <p>Message: <textarea name="message" rows="10" cols="50">{{ form.message.value|default_if_none:"" }}</textarea></p>
-    <input type="submit" value="Submit">
-    </form>
+<div class="row">
+    <div class="col-md-6 col-md-offset-3">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                <h3 class="panel-title">Contact Us</h3>
+            </div>
+            <div class="panel-body">
+                {% include "notifications.html" %}
+                <form class="form-horizontal" method="post">
+                    {% csrf_token %}
+                    <fieldset>
+                        <div class="form-group {% if form.subject.errors %} has-error  {% endif %}">
+                            <label class="col-md-3 control-label" for="name">Subject</label>
+                            <div class="col-md-9">
+                                <input name="subject" type="text" placeholder="Subject" class="form-control" value="{{ form.subject.value|default_if_none:"" }}">
+                                {% for error in form.subject.errors %}<span class="help-block">{{ error|escape }}</span>{% endfor %}
+                            </div>
+                        </div>
+                        <div class="form-group {% if form.email.errors %} has-error  {% endif %}">
+                            <label class="col-md-3 control-label" for="email">Email</label>
+                            <div class="col-md-9">
+                                <input id="email" name="email" type="email" placeholder="Your email" class="form-control" value="{{ form.email.value|default_if_none:"" }}">
+                                {% for error in form.email.errors %}<span class="help-block">{{ error|escape }}</span>{% endfor %}
+                            </div>
+                        </div>
+                        <div class="form-group {% if form.message.errors %} has-error  {% endif %}">
+                            <label class="col-md-3 control-label" for="message">Message</label>
+                            <div class="col-md-9">
+                                <textarea class="form-control" id="message" name="message" placeholder="Please enter your message here..." rows="5">{{ form.message.value|default_if_none:"" }}</textarea>
+                                {% for error in form.message.errors %}<span class="help-block">{{ error|escape }}</span>{% endfor %}
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-12 text-right">
+                                <button type="submit" class="btn btn-primary btn-lg">Submit</button>
+                            </div>
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 
 {% endblock %}
