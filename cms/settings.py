@@ -12,6 +12,16 @@ https://docs.djangoproject.com/en/1.7/ref/settings/
 import os
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
+TEMPLATE_CONTEXT_PROCESSORS = (
+    'django.contrib.auth.context_processors.auth',
+    'django.core.context_processors.debug',
+    'django.core.context_processors.i18n',
+    'django.core.context_processors.media',
+    'django.core.context_processors.static',
+    'django.core.context_processors.tz',
+    'django.contrib.messages.context_processors.messages',
+    'django.core.context_processors.request',
+)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.7/howto/deployment/checklist/
@@ -20,7 +30,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 SECRET_KEY = 'g$+c-l1mzofiya)8$wmm!dos(wp(44ca#f4x!!+hbskxe(f(oj'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 TEMPLATE_DEBUG = DEBUG
 
@@ -109,14 +119,14 @@ SECURE_FRAME_DENY = True
 SECURE_CONTENT_TYPE_NOSNIFF = True
 SECURE_BROWSER_XSS_FILTER = True
 CSP_DEFAULT_SRC = ("'self'")
-CSP_SCRIPT_SRC = ("'self'", "'unsafe-inline'")
+CSP_SCRIPT_SRC = ("'self'", "'unsafe-inline'", "ajax.googleapis.com", "netdna.bootstrapcdn.com")
 CSP_IMG_SRC = ("'self'")
 CSP_OBJECT_SRC = ("'self'")
 CSP_MEDIA_SRC = ("'self'")
 CSP_FRAME_SRC = ("'self'")
 CSP_FONT_SRC = ("'self'")
 CSP_CONNECT_SRC = ("'self'")
-CSP_STYLE_SRC = ("'self'", "'unsafe-inline'")
+CSP_STYLE_SRC = ("'self'", "'unsafe-inline'", "netdna.bootstrapcdn.com")
 X_FRAME_OPTIONS = 'DENY'
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
