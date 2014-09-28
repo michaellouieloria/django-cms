@@ -36,3 +36,4 @@ urlpatterns = patterns('',
             'django.contrib.auth.views.password_change_done'),
     url(r'^admin/', include(admin.site.urls)),
 )
+
