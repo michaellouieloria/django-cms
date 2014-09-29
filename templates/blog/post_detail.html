@@ -2,11 +2,14 @@
 {% block title %}Blog Post{% endblock %}
 {% block content %}
 
-  <h2>{{ post.title }}</h2>
-  <p><b>Author:</b> {{ post.author }}</p>
-  <p><b>Created:</b> {{ post.creation_date|date:"d/m/Y" }}</p>
-  <p> {{ post.content }}</p>
-
-  <a href="{% url "blog-list" %}"><input type="button" value="Return to Blog List" /></a>
+<div class="col-md-12">
+    <h1>{{ post.title }}</h1>
+    <p>{{ post.content|truncatewords:20 }}</p>
+    <div>
+        <span class="badge">Posted {{ post.creation_date|date:"d/m/Y" }} by {{ post.author }}</span>
+    </div>
+    <hr>
+    <a href="{% url "blog-list" %}" class="btn btn-primary">Return to Blog List</a>
+</div>
 
 {% endblock %}
